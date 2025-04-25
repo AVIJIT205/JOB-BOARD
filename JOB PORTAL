@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Board</title>
+  
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f0f2f5; }
+    .container { max-width: 1000px; margin: auto; padding: 20px; }
+    h1 { text-align: center; margin-bottom: 30px; }
+    .job-card { background: #fff; padding: 20px; margin-bottom: 15px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .job-title { font-size: 20px; font-weight: bold; }
+    .job-details { margin-top: 10px; font-size: 14px; color: #555; }
+    .btn { background: #007bff; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+    .btn:hover { background: #0056b3; }
+    .filter-bar { margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+    select { padding: 8px; }
+    .admin-panel { margin-top: 30px; padding: 20px; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .admin-panel input, .admin-panel textarea { width: 100%; padding: 8px; margin-bottom: 10px; }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Job Board</h1>
+
+    <!-- Filter Section -->
+    <div class="filter-bar">
+      <select id="cityFilter">
+        <option value="">All Cities</option>
+        <option value="Kolkata">Kolkata</option>
+        <option value="Mumbai">Mumbai</option>
+        <option value="Pune">Pune</option>
+        <option value="Hyderabad">Hyderabad</option>
+        <option value="Bangalore">Bangalore</option>
+        <option value="Delhi">Delhi</option>
+      </select>
+      <select id="roleFilter">
+        <option value="">All Roles</option>
+        <option value="Frontend Developer">Frontend Developer</option>
+        <option value="Backend Developer">Backend Developer</option>
+        <option value="Full Stack Developer">Full Stack Developer</option>
+        <option value="Project Manager">Project Manager</option>
+        <option value="Software Developer">Software Developer</option>
+        <option value="Software Engineer">Software Engineer</option>
+        <option value="DevOps Engineer">DevOps Engineer</option>
+      </select>
+      <button class="btn" onclick="filterJobs()">Filter</button>
+    </div>
+
+    <!-- Job Listings -->
+    <div id="jobList"></div>
+
+    <!-- Admin Panel for Job Posting -->
+    <div class="admin-panel">
+      <h3>Admin Panel - Post a Job</h3>
+      <input type="text" id="jobTitle" placeholder="Job Title" />
+      <input type="text" id="companyName" placeholder="Company Name" />
+      <select id="jobLocation">
+        <option value="Kolkata">Kolkata</option>
+        <option value="Mumbai">Mumbai</option>
+        <option value="Pune">Pune</option>
+        <option value="Hyderabad">Hyderabad</option>
+        <option value="Bangalore">Bangalore</option>
+        <option value="Delhi">Delhi</option>
+      </select>
+      <textarea id="jobDescription" placeholder="Job Description" rows="4"></textarea>
+      <button class="btn" onclick="postJob()">Post Job</button>
+    </div>
+  </div>
+  <script>
+  const jobs = [
+  { title: "Frontend Developer", location: "Kolkata", company: "Deloitte", description: "Developing UI for web applications" },
+  { title: "Backend Developer", location: "Mumbai", company: "EY", description: "Managing server-side logic" },
+  { title: "Full Stack Developer", location: "Pune", company: "Oracle", description: "Handling both frontend and backend" },
+  { title: "Project Manager", location: "Hyderabad", company: "Wipro", description: "Managing project timelines and teams" },
+  { title: "Software Developer", location: "Bangalore", company: "TCS", description: "Developing software solutions" },
+  { title: "Software Engineer", location: "Delhi", company: "Deloitte", description: "Building scalable software systems" },
+  { title: "DevOps Engineer", location: "Mumbai", company: "Oracle", description: "Managing cloud infrastructure" }
+];
+
+function displayJobs(filteredJobs) {
+  const jobList = document.getElementById("jobList");
+  jobList.innerHTML = "";
+  filteredJobs.forEach(job => {
+    const jobEl = document.createElement("div");
+    jobEl.className = "job-card";
+    jobEl.innerHTML = `
+      <div class="job-title">${job.title}</div>
+      <div class="job-details">Location: ${job.location}</div>
+      <div class="job-details">Company: ${job.company}</div>
+      <div class="job-details">Description: ${job.description}</div>
+      <button class="btn" onclick="applyJob('${job.title}', '${job.company}')">Apply</button>
+    `;
+    jobList.appendChild(jobEl);
+  });
+}
+
+function filterJobs() {
+  const city = document.getElementById("cityFilter").value;
+  const role = document.getElementById("roleFilter").value;
+  const filtered = jobs.filter(job => {
+    return (city === "" || job.location === city) && (role === "" || job.title === role);
+  });
+  displayJobs(filtered);
+}
+
+function applyJob(title, company) {
+  alert(`Application submitted for ${title} at ${company}`);
+}
+
+function postJob() {
+  const jobTitle = document.getElementById("jobTitle").value;
+  const companyName = document.getElementById("companyName").value;
+  const jobLocation = document.getElementById("jobLocation").value;
+  const jobDescription = document.getElementById("jobDescription").value;
+
+  if (jobTitle && companyName && jobLocation && jobDescription) {
+    jobs.push({ title: jobTitle, location: jobLocation, company: companyName, description: jobDescription });
+    alert("Job posted successfully!");
+    displayJobs(jobs);  // Re-display the updated job list
+  } else {
+    alert("Please fill out all fields.");
+  }
+}
+
+// Display all jobs initially
+displayJobs(jobs);
+</script>
+  
+</body>
+</html>
